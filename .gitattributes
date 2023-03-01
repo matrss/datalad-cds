@@ -1,1 +1,2 @@
 datalad_cds/_version.py export-subst
+src/datalad_cds/_version.py export-subst

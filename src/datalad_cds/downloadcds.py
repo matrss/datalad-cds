@@ -30,7 +30,7 @@ from datalad.support.exceptions import (
 )
 
 from datalad.interface.results import get_status_dict
-import datalad_cds_extension.cdsrequest
+import datalad_cds.cdsrequest
 import logging
 logger = logging.getLogger('datalad.cds.download-cds')
 
@@ -40,7 +40,7 @@ logger = logging.getLogger('datalad.cds.download-cds')
 # all commands must be derived from Interface
 class DownloadCDS(Interface):
 
-    """Downloads specified datasets from the CDS data store     
+    """Downloads specified datasets from the CDS data store
 
     More information on our GitHub-Repo:
     https://github.com/lvanhaaren/DataladExtensionCDS
@@ -91,7 +91,7 @@ class DownloadCDS(Interface):
         dataset=None, path=None,
         archive=False, save=True, message=None
     ) -> Iterable[Dict]:
-        
+
         inputList = fileToList(user_string_input)
         request_str = inputList[0]
         ds = None
@@ -146,12 +146,12 @@ The file of the request:
 def ensure_special_remote_exists_and_is_enabled(
     repo: AnnexRepo, remote: Literal["cdsrequest"]
 ) -> None:
-    
+
     """Initialize and enable the cdsrequest special remote, if it isn't already.
     Very similar to datalad.customremotes.base.ensure_datalad_remote.
     """
 
-    uuids = {"cdsrequest": datalad_cds_extension.cdsrequest.cdsrequest_REMOTE_UUID}
+    uuids = {"cdsrequest": datalad_cds.cdsrequest.cdsrequest_REMOTE_UUID}
     uuid = uuids[remote]
 
     name = repo.get_special_remotes().get(uuid, {}).get("name")
