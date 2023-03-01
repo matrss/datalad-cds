@@ -5,7 +5,7 @@ import base64
 import logging
 import os.path as op
 import urllib.parse
-from typing import Dict, Iterable, List, Literal
+from typing import Dict, Iterable, List, Literal, Optional
 
 from datalad.distribution.dataset import (
     EnsureDataset,
@@ -19,7 +19,6 @@ from datalad.interface.results import get_status_dict
 from datalad.interface.utils import eval_results
 from datalad.support.annexrepo import AnnexRepo
 from datalad.support.constraints import EnsureNone, EnsureStr
-from datalad.support.exceptions import NoDatasetFound
 from datalad.support.param import Parameter
 
 import datalad_cds.cdsrequest
@@ -76,28 +75,22 @@ class DownloadCDS(Interface):
     @datasetmethod(name="download_cds")
     @eval_results
     def __call__(
-        user_string_input,
-        dataset=None,
-        path=None,
-        archive=False,
-        save=True,
-        message=None,
+        user_string_input: str,
+        dataset: Optional[str] = None,
+        path: Optional[str] = None,
+        archive: bool = False,
+        save: bool = True,
+        message: Optional[str] = None,
     ) -> Iterable[Dict]:
         inputList = fileToList(user_string_input)
         request_str = inputList[0]
-        ds = None
+        ds = require_dataset(dataset, check_installed=True, purpose="download cds")
         if not path:
             path = inputList[1]
             """
             if(not op.exists(path)):
                 raise ValueError("The path in the file is not valid!")
             """
-
-        try:
-            ds = require_dataset(dataset, check_installed=True, purpose="download cds")
-        except NoDatasetFound:
-            pass
-
         path = str(resolve_path(path or op.curdir, ds=dataset))
         url = toUrl(request_str)
         logger.debug("url is %s", url)
@@ -162,7 +155,7 @@ def ensure_special_remote_exists_and_is_enabled(
         repo.enable_remote(name)
 
 
-def fileToList(input_file) -> List[str]:
+def fileToList(input_file: str) -> List[str]:
     readfile = open(input_file)
     readstr = readfile.read()
 
@@ -191,7 +184,7 @@ def fileToList(input_file) -> List[str]:
     return [string_server + dictString, string_to]
 
 
-def toUrl(request: str):
+def toUrl(request: str) -> str:
     return "cdsrequest:v1-" + urllib.parse.quote(
         base64.urlsafe_b64encode(request.encode("utf-8"))
     )

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import ast
 import base64
 import inspect
@@ -35,7 +34,7 @@ class CdsRemote(SpecialRemote):
     def prepare(self) -> None:
         pass
 
-    def _execute_cds(self, request: str, filename) -> None:
+    def _execute_cds(self, request: str, filename: str) -> None:
         dictStart = request.index("{")
         dataset_to = request[0:dictStart]
         request_dict_str = request[dictStart : len(request)]
@@ -45,7 +44,7 @@ class CdsRemote(SpecialRemote):
         c = cdsapi.Client()
         c.retrieve(dataset_to, request_dict, filename)
 
-    def transfer_retrieve(self, key: str, filename) -> None:
+    def transfer_retrieve(self, key: str, filename: str) -> None:
         logger.debug(
             "%s called with key %s and filename %s",
             inspect.stack()[0][3],
@@ -66,7 +65,7 @@ class CdsRemote(SpecialRemote):
         return url.startswith("cdsrequest:")
 
 
-def main():
+def main() -> None:
     master = Master()
     remote = CdsRemote(master)
     master.LinkRemote(remote)

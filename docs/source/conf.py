@@ -17,6 +17,7 @@ import sys
 from os import pardir
 from os.path import abspath, dirname, exists
 from os.path import join as opj
+from typing import List
 
 import datalad_cds
 
@@ -107,7 +108,7 @@ language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns: List[str] = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
