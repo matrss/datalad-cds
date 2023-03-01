@@ -4,10 +4,9 @@ import base64
 import inspect
 import logging
 import urllib
-from typing import List
 
 import cdsapi
-from annexremote import Master, RemoteError, SpecialRemote
+from annexremote import Master, SpecialRemote
 
 logger = logging.getLogger("datalad.download-cds.cdsrequest")
 

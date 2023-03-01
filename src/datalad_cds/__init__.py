@@ -27,6 +27,6 @@ command_suite = (
     ],
 )
 
-from . import _version
+from . import _version  # noqa: E402
 
 __version__ = _version.get_versions()["version"]
