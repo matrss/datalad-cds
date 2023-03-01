@@ -1,3 +1,4 @@
 def test_register():
     import datalad.api as da
-    assert hasattr(da, 'download_cds')
+
+    assert hasattr(da, "download_cds")

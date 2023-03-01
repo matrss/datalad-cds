@@ -1,38 +1,30 @@
 """DataLad cds downloader"""
 
-__docformat__ = 'restructuredtext'
+__docformat__ = "restructuredtext"
 import base64
-import urllib.parse
+import logging
 import os.path as op
+import urllib.parse
 from typing import Dict, Iterable, List, Literal
-from datalad.interface.base import Interface
-from datalad.interface.base import build_doc
-from datalad.support.param import Parameter
-from datalad.support.annexrepo import AnnexRepo
-from datalad.distribution.dataset import datasetmethod
-from datalad.interface.utils import eval_results
+
 from datalad.distribution.dataset import (
     EnsureDataset,
     datasetmethod,
     require_dataset,
-    resolve_path
+    resolve_path,
 )
-from datalad.support.constraints import (
-    EnsureNone,
-    EnsureStr,
-)
-from datalad.interface.common_opts import (
-    nosave_opt,
-    save_message_opt,
-)
-from datalad.support.exceptions import (
-    NoDatasetFound,
-)
-
+from datalad.interface.base import Interface, build_doc
+from datalad.interface.common_opts import nosave_opt, save_message_opt
 from datalad.interface.results import get_status_dict
+from datalad.interface.utils import eval_results
+from datalad.support.annexrepo import AnnexRepo
+from datalad.support.constraints import EnsureNone, EnsureStr
+from datalad.support.exceptions import NoDatasetFound
+from datalad.support.param import Parameter
+
 import datalad_cds.cdsrequest
-import logging
-logger = logging.getLogger('datalad.cds.download-cds')
+
+logger = logging.getLogger("datalad.cds.download-cds")
 
 
 # decoration auto-generates standard help
@@ -47,18 +39,16 @@ class DownloadCDS(Interface):
     """
 
     _params_ = dict(
-
-        user_string_input=Parameter(
-            doc="""json file with retrieve request"""),
+        user_string_input=Parameter(doc="""json file with retrieve request"""),
         dataset=Parameter(
             args=("-d", "--dataset"),
-            metavar='PATH',
+            metavar="PATH",
             doc="""specify the dataset to add files to. If no dataset is given,
             an attempt is made to identify the dataset based on the current
             working directory. Use [CMD: --nosave CMD][PY: save=False PY] to
             prevent adding files to the dataset.""",
-            constraints=EnsureDataset() | EnsureNone()),
-
+            constraints=EnsureDataset() | EnsureNone(),
+        ),
         path=Parameter(
             args=("-O", "--path"),
             doc="""target for download. If the path has a trailing separator,
@@ -69,33 +59,34 @@ class DownloadCDS(Interface):
             if they are not yet present) and only a single URL should be given.
             In both cases, leading directories will be created if needed. This
             argument defaults to the current directory.""",
-            constraints=EnsureStr() | EnsureNone()),
-
+            constraints=EnsureStr() | EnsureNone(),
+        ),
         archive=Parameter(
             args=("--archive",),
             action="store_true",
             doc="""pass the downloaded files to [CMD: :command:`datalad
             add-archive-content --delete` CMD][PY: add_archive_content(...,
-            delete=True) PY]"""),
-
+            delete=True) PY]""",
+        ),
         save=nosave_opt,
-
-        message=save_message_opt
+        message=save_message_opt,
     )
 
     @staticmethod
-    @datasetmethod(name='download_cds')
+    @datasetmethod(name="download_cds")
     @eval_results
     def __call__(
         user_string_input,
-        dataset=None, path=None,
-        archive=False, save=True, message=None
+        dataset=None,
+        path=None,
+        archive=False,
+        save=True,
+        message=None,
     ) -> Iterable[Dict]:
-
         inputList = fileToList(user_string_input)
         request_str = inputList[0]
         ds = None
-        if(not path):
+        if not path:
             path = inputList[1]
             """
             if(not op.exists(path)):
@@ -103,9 +94,7 @@ class DownloadCDS(Interface):
             """
 
         try:
-            ds = require_dataset(
-                dataset, check_installed=True,
-                purpose='download cds')
+            ds = require_dataset(dataset, check_installed=True, purpose="download cds")
         except NoDatasetFound:
             pass
 
@@ -128,25 +117,23 @@ The file of the request:
 ^^^ Do not change lines above ^^^
         """
 
-        msg = msg.format(message if message is not None else "",
-            request_str,pathobj
-        )
-        if(save):
+        msg = msg.format(message if message is not None else "", request_str, pathobj)
+        if save:
             yield ds.save(pathobj, message=msg)
         yield get_status_dict(action="cdsrequest", status="ok")
-        if(archive):
+        if archive:
             yield from ds.add_archive_content(
-                                pathobj,
-                                delete=True,
-                                on_failure='ignore',
-                                return_type='generator',
-                                result_renderer='disabled'
-                            )
+                pathobj,
+                delete=True,
+                on_failure="ignore",
+                return_type="generator",
+                result_renderer="disabled",
+            )
+
 
 def ensure_special_remote_exists_and_is_enabled(
     repo: AnnexRepo, remote: Literal["cdsrequest"]
 ) -> None:
-
     """Initialize and enable the cdsrequest special remote, if it isn't already.
     Very similar to datalad.customremotes.base.ensure_datalad_remote.
     """
@@ -174,34 +161,37 @@ def ensure_special_remote_exists_and_is_enabled(
         logger.debug("special remote %s found, enabling", name)
         repo.enable_remote(name)
 
+
 def fileToList(input_file) -> List[str]:
     readfile = open(input_file)
     readstr = readfile.read()
 
-    startDict = readstr.index('{')
-    endDict = readstr.index('}')
+    startDict = readstr.index("{")
+    endDict = readstr.index("}")
     string_server = readstr[0:startDict]
-    dictString = readstr[startDict:endDict+1]
-    string_to = readstr[endDict+1:len(readstr)]
+    dictString = readstr[startDict : endDict + 1]
+    string_to = readstr[endDict + 1 : len(readstr)]
 
-    dictString.replace("\n","")
-    string_server = string_server[1:len(string_server)-1]
-    string_to = string_to[1:len(string_to)-1]
+    dictString.replace("\n", "")
+    string_server = string_server[1 : len(string_server) - 1]
+    string_to = string_to[1 : len(string_to) - 1]
 
-    string_server=string_server.replace("\n","")
-    string_server=string_server.replace(",","")
-    string_server=string_server.replace("\"","")
-    string_server=string_server.replace("'","")
-    string_server=string_server.replace(" ","")
+    string_server = string_server.replace("\n", "")
+    string_server = string_server.replace(",", "")
+    string_server = string_server.replace('"', "")
+    string_server = string_server.replace("'", "")
+    string_server = string_server.replace(" ", "")
 
-    string_to=string_to.replace(",","")
-    string_to=string_to.replace("\"","")
-    string_to=string_to.replace("'","")
-    string_to=string_to.replace("\n","")
-    string_to=string_to.replace(" ","")
+    string_to = string_to.replace(",", "")
+    string_to = string_to.replace('"', "")
+    string_to = string_to.replace("'", "")
+    string_to = string_to.replace("\n", "")
+    string_to = string_to.replace(" ", "")
 
-    return [string_server+dictString,string_to]
+    return [string_server + dictString, string_to]
+
 
 def toUrl(request: str):
-
-    return "cdsrequest:v1-" + urllib.parse.quote(base64.urlsafe_b64encode(request.encode("utf-8")))
+    return "cdsrequest:v1-" + urllib.parse.quote(
+        base64.urlsafe_b64encode(request.encode("utf-8"))
+    )

@@ -12,8 +12,9 @@ from _datalad_buildsupport.setup import BuildManPage  # noqa: E402
 cmdclass = versioneer.get_cmdclass()
 cmdclass.update(build_manpage=BuildManPage)
 
-if __name__ == '__main__':
-    setup(name='datalad-cds',
-          version=versioneer.get_version(),
-          cmdclass=cmdclass,
+if __name__ == "__main__":
+    setup(
+        name="datalad-cds",
+        version=versioneer.get_version(),
+        cmdclass=cmdclass,
     )
