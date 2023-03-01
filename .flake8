@@ -1,0 +1,12 @@
+[flake8]
+extend-select = B950
+extend-ignore = E203,E501
+max-line-length = 88
+exclude =
+    .git,
+    __pycache__,
+    _datalad_buildsupport,
+    .tox,
+    build,
+    versioneer.py,
+    src/datalad_cds/_version.py

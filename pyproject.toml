@@ -1,15 +1,18 @@
 [project]
-name = "datalad-cds-extension"
-description = "DataLad extension for downloading from cds api"
-requires-python = ">=3.10"
+name = "datalad-cds"
+description = "DataLad extension for downloading from the Copernicus Climate Data Store"
+requires-python = ">=3.7"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
   { name = "The DataLad Team and Contributors", email = "team@datalad.org" },
-  { name = "Laurens Jan van Haaaren", email = "l.van.haaren@fz-juelich.de" },
+  { name = "Benedikt Bulich", email = "b.bulich@fz-juelich.de" },
+  { name = "Daniel Klauß", email = "daniel.klauss@alumni.fh-aachen.de" },
+  { name = "Laurens Jan van Haaren", email = "l.van.haaren@fz-juelich.de" },
+  { name = "Matthias Riße", email = "m.risse@fz-juelich.de" },
 ]
 maintainers = [
-  { name = "Laurens Jan van Haaaren", email = "l.van.haaren@fz-juelich.de" },
+  { name = "Matthias Riße", email = "m.risse@fz-juelich.de" },
 ]
 classifiers = [
   "Programming Language :: Python",
@@ -23,13 +26,91 @@ dependencies = [
   "annexremote>=1.6.0",
   "cdsapi>=0.5.1",
 ]
-[project.entry-points."datalad.extensions"]
-download-cds = "datalad_cds_extension:command_suite"
 
-[build-system]
-requires = ["setuptools >= 43.0.0", "wheel"]
-[project.scripts]
-git-annex-remote-cdsrequest = "datalad_cds_extension.cdsrequest:main"
+[project.optional-dependencies]
+devel = [
+  "black",
+  "coverage",
+  "flake8",
+  "flake8-bugbear",
+  "isort",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+  "sphinx",
+  "sphinx_rtd_theme",
+]
 
 [project.urls]
-"Homepage"="https://github.com/lvanhaaren/DataladExtensionCDS"
+repository = "https://github.com/m.risse/datalad-cds"
+
+[project.scripts]
+git-annex-remote-cdsrequest = "datalad_cds.cdsrequest:main"
+
+[project.entry-points."datalad.extensions"]
+download-cds = "datalad_cds:command_suite"
+
+[build-system]
+requires = ["setuptools >= 43.0.0", "tomli; python_version < '3.11'"]
+build-backend = "setuptools.build_meta"
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "src/datalad_cds/_version.py"
+versionfile_build = "datalad_cds/_version.py"
+tag_prefix = "v"
+
+[tool.coverage.report]
+show_missing = true
+omit = ["src/datalad_cds/_version.py"]
+
+[tool.black]
+line-length = 88
+extend-exclude = '''
+(
+  ^/_datalad_buildsupport
+  | ^/versioneer.py
+  | ^/src/datalad_cds/_version.py
+)
+'''
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+extend_skip = [
+  "_datalad_buildsupport/",
+  "versioneer.py",
+  "src/datalad_cds/_version.py",
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+exclude = [
+  '.tox/',
+  'build/',
+  '_datalad_buildsupport/',
+  'datalad_cds/_version.py',
+  'versioneer.py',
+]
+
+[[tool.mypy.overrides]]
+module = [
+  "setup",
+  "datalad_cds",
+]
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = [
+  "datalad_cds._version",
+  "versioneer",
+  "_datalad_buildsupport.*",
+]
+follow_imports = "skip"
+
+# [tool.flake8]
+# flake8 still does not support pyproject.toml, so it's configured in .flake8
