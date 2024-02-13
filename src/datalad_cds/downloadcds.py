@@ -30,12 +30,7 @@ logger = logging.getLogger("datalad.cds.download-cds")
 @build_doc
 # all commands must be derived from Interface
 class DownloadCDS(Interface):
-
-    """Downloads specified datasets from the CDS data store
-
-    More information on our GitHub-Repo:
-    https://github.com/lvanhaaren/DataladExtensionCDS
-    """
+    """Downloads specified datasets from the CDS data store"""
 
     _params_ = dict(
         user_string_input=Parameter(doc="""json file with retrieve request"""),
