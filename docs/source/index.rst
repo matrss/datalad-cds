@@ -1,8 +1,8 @@
-DataLad extension template
-**************************
+DataLad CDS extension
+*********************
 
-This is a template for creating a `DataLad <http://datalad.org>`__ extension
-that equips DataLad with additional functionality.
+This is a DataLad extension that enables fetching of data from the Copernicus Climate Data Store
+in a way that is tightly integrated with DataLad and git-annex.
 
 
 API
@@ -11,20 +11,19 @@ API
 High-level API commands
 -----------------------
 
-.. currentmodule:: datalad.api
-.. autosummary::
-   :toctree: generated
+.. toctree::
+   :maxdepth: 2
 
-   download_cds
+   python_reference.rst
 
 
 Command line reference
 ----------------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   generated/man/datalad-download-cds
+   cli_reference.rst
 
 
 Indices and tables
