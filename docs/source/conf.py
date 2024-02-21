@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import datetime
 import subprocess
 import sys
 from os import pardir
@@ -89,9 +90,11 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "DataLad extension for downloading from the Copernicus Climate Data Store"
-copyright = ""
-author = ""
+project = "DataLad CDS extension"
+copyright = "2018-{}, Matthias Riße, the DataLad team and contributors".format(
+    datetime.datetime.now().year
+)
+author = "Matthias Riße"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -117,7 +120,7 @@ pygments_style = "sphinx"
 todo_include_todos = True
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"https://docs.python.org/": None}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 # -- Options for HTML output ----------------------------------------------
 

@@ -29,14 +29,12 @@ dependencies = [
 
 [project.optional-dependencies]
 devel = [
-  "black",
   "coverage",
-  "flake8",
-  "flake8-bugbear",
-  "isort",
+  "hypothesis",
   "mypy",
   "pytest",
   "pytest-cov",
+  "ruff",
   "sphinx",
   "sphinx_rtd_theme",
 ]
@@ -45,7 +43,7 @@ devel = [
 repository = "https://github.com/m.risse/datalad-cds"
 
 [project.scripts]
-git-annex-remote-cdsrequest = "datalad_cds.cdsrequest:main"
+git-annex-remote-cds = "datalad_cds.cds_remote:main"
 
 [project.entry-points."datalad.extensions"]
 download-cds = "datalad_cds:command_suite"
@@ -65,24 +63,16 @@ tag_prefix = "v"
 show_missing = true
 omit = ["src/datalad_cds/_version.py"]
 
-[tool.black]
+[tool.ruff]
 line-length = 88
-extend-exclude = '''
-(
-  ^/_datalad_buildsupport
-  | ^/versioneer.py
-  | ^/src/datalad_cds/_version.py
-)
-'''
-
-[tool.isort]
-profile = "black"
-skip_gitignore = true
-extend_skip = [
+extend-exclude = [
   "_datalad_buildsupport/",
-  "versioneer.py",
   "src/datalad_cds/_version.py",
+  "versioneer.py",
 ]
+
+[tool.ruff.lint]
+extend-select = ["I"]
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -90,11 +80,12 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 exclude = [
-  '.tox/',
-  'build/',
-  '_datalad_buildsupport/',
-  'datalad_cds/_version.py',
-  'versioneer.py',
+  ".tox/",
+  "_datalad_buildsupport/",
+  "build/",
+  "src/datalad_cds/_version.py",
+  "venv/",
+  "versioneer.py",
 ]
 
 [[tool.mypy.overrides]]
@@ -111,6 +102,3 @@ module = [
   "_datalad_buildsupport.*",
 ]
 follow_imports = "skip"
-
-# [tool.flake8]
-# flake8 still does not support pyproject.toml, so it's configured in .flake8
