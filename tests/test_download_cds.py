@@ -22,7 +22,6 @@ request_dict = {
 @pytest.mark.parametrize("cds_request", [request_dict, json.dumps(request_dict)])
 def test_download_cds(cds_request: Union[str, dict], empty_dataset: da.Dataset) -> None:
     dataset = empty_dataset
-    dataset.configuration("set", [("remote.cds.dry-run", "true")], scope="local")
     dataset.download_cds(
         cds_request,
         path="download.grib",
