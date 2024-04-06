@@ -28,7 +28,7 @@ jobs:
         make -C docs html
     - name: Setup Pages
       if: github.ref_name == 'main'
-      uses: actions/configure-pages@v4
+      uses: actions/configure-pages@v5
     - name: Upload Pages artifact
       if: github.ref_name == 'main'
       uses: actions/upload-pages-artifact@v3
