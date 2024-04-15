@@ -42,7 +42,7 @@ class Spec:
         }
 
     def to_json(self) -> str:
-        return json.dumps(self.to_dict(), separators=(",", ":"))
+        return json.dumps(self.to_dict(), separators=(",", ":"), sort_keys=True)
 
     def to_url(self) -> str:
         json_spec = self.to_json()
