@@ -88,7 +88,7 @@ class DownloadCDS(Interface):
         url = parsed_spec.to_url()
         options = []
         if lazy:
-            options.append("--relaxed")
+            options.append("--fast")
         ds.repo.add_url_to_file(pathobj, url, options=options)
         if save:
             msg = (
