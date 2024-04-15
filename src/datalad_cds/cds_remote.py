@@ -95,8 +95,8 @@ class CDSRemote(SpecialRemote):
         return datalad_cds.spec.Spec.from_url(url).to_json()
 
     def checkpresent(self, key: str) -> bool:
-        # We just assume that we can always handle the key
-        return True
+        urls = self.annex.geturls(key, "cds:")
+        return len(urls) > 0
 
     def claimurl(self, url: str) -> bool:
         return url.startswith("cds:")
