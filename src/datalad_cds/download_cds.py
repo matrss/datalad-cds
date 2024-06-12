@@ -89,6 +89,7 @@ class DownloadCDS(Interface):
         options = []
         if lazy:
             options.append("--fast")
+            options.append("--verifiable")
         ds.repo.add_url_to_file(pathobj, url, options=options)
         if save:
             msg = (
