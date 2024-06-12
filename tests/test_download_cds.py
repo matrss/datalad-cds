@@ -49,5 +49,5 @@ def test_download_cds_lazy(
     )
     assert (
         os.readlink(dataset.pathobj / "download.grib")
-        == ".git/annex/objects/5J/pV/URL--cds&cv1-eyJkYXRhc2V0IjoicmVhbmFs-77566133ebfe9220aefbeed5a58b6972/URL--cds&cv1-eyJkYXRhc2V0IjoicmVhbmFs-77566133ebfe9220aefbeed5a58b6972"
+        == ".git/annex/objects/69/qm/VURL--cds&cv1-eyJkYXRhc2V0IjoicmVhbmFs-77566133ebfe9220aefbeed5a58b6972/VURL--cds&cv1-eyJkYXRhc2V0IjoicmVhbmFs-77566133ebfe9220aefbeed5a58b6972"
     )
