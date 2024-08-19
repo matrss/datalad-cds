@@ -3,8 +3,9 @@ import os
 from typing import Union
 
 import datalad.api as da
-import datalad_cds
 import pytest
+
+import datalad_cds
 
 request_dict = {
     "dataset": "reanalysis-era5-pressure-levels",
