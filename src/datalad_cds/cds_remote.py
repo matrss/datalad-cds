@@ -1,6 +1,5 @@
 import pathlib
 import subprocess
-import time
 
 import cdsapi
 from annexremote import Master, ProtocolError, RemoteError, SpecialRemote
@@ -39,44 +38,12 @@ class CDSRemote(SpecialRemote):
         )
         return result.returncode == 0 and result.stdout.strip() == "true"
 
-    def _info(self, message: str) -> None:
-        try:
-            self.annex.info(message)
-        except ProtocolError:
-            pass
-
     def _retrieve_cds(self, spec: datalad_cds.spec.Spec, filename: str) -> None:
         if self._is_dry_run():
             pathlib.Path(filename).write_text(spec.to_json())
             return
-        c = cdsapi.Client(quiet=True, wait_until_complete=False)
-        r = c.retrieve(spec.dataset, spec.sub_selection)
-        self._info("CDS request is submitted")
-        previous_state = "submitted"
-        sleep_duration = 1.0
-        sleep_max = 60.0
-        while True:
-            r.update()
-            current_state = r.reply["state"]
-            if current_state != previous_state:
-                self._info("CDS request is {}".format(current_state))
-            if current_state == "completed":
-                break
-            if current_state == "failed":
-                error = r.reply["error"]
-                raise RemoteError(
-                    "CDS request failed, message: {}, reason: {}".format(
-                        error.get("message"), error.get("reason")
-                    )
-                )
-            # Exponential backoff
-            sleep_duration *= 1.5
-            if sleep_duration > sleep_max:
-                sleep_duration = sleep_max
-            previous_state = current_state
-            time.sleep(sleep_duration)
-        self._info("Starting download from CDS")
-        r.download(filename)
+        c = cdsapi.Client()
+        c.retrieve(spec.dataset, spec.sub_selection, filename)
 
     def transfer_retrieve(self, key: str, filename: str) -> None:
         urls = self.annex.geturls(key, "cds:")
