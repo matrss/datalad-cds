@@ -51,6 +51,15 @@ class DownloadCDS(Interface):
             doc="""target path to download to.""",
             constraints=EnsureStr(),
         ),
+        batch=Parameter(
+            args=("--batch",),
+            action="store_true",
+            doc="""By default a single call to `git annex addurl` will be made
+            for each request to download. The batch option can be supplied to
+            instead re-use a `git annex addurl --batch` process for multiple
+            consecutive calls to download-cds. This is only useful when used
+            with the python API.""",
+        ),
         lazy=Parameter(
             args=("--lazy",),
             action="store_true",
@@ -73,8 +82,9 @@ class DownloadCDS(Interface):
         *,
         dataset: Optional[str] = None,
         message: Optional[str] = None,
-        save: bool = True,
+        batch: bool = False,
         lazy: bool = False,
+        save: bool = True,
     ) -> Iterable[dict]:
         if isinstance(spec, dict):
             parsed_spec = datalad_cds.spec.Spec.from_dict(spec)
@@ -89,7 +99,7 @@ class DownloadCDS(Interface):
         options = []
         if lazy:
             options.append("--fast")
-        ds.repo.add_url_to_file(pathobj, url, options=options)
+        ds.repo.add_url_to_file(pathobj, url, batch=batch, options=options)
         if save:
             msg = (
                 message
