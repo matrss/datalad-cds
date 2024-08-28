@@ -33,10 +33,4 @@ def single_file_dataset(request: SubRequest, empty_dataset: da.Dataset) -> da.Da
         lazy=request.param == "lazy",
         path="download.grib",
     )
-    if request.param == "lazy":
-        dataset.configuration(
-            "set",
-            [("remote.cds.annex-security-allow-unverified-downloads", "ACKTHPPT")],
-            scope="local",
-        )
     return dataset

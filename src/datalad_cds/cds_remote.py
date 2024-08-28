@@ -14,7 +14,21 @@ class CDSRemote(SpecialRemote):
     remove = None
 
     def initremote(self) -> None:
-        pass
+        # Setting this here feels a bit rude, but we know that what we download is at
+        # least verified by a TLS certificate of the CDS, so this security issue doesn't
+        # affect the CDS special remote.
+        result = subprocess.run(
+            [
+                "git",
+                "config",
+                "remote.cds.annex-security-allow-unverified-downloads",
+                "ACKTHPPT",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RemoteError("unable to set necessary git config")
 
     def prepare(self) -> None:
         pass
