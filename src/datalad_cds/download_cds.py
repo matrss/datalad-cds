@@ -128,7 +128,6 @@ def ensure_special_remote_exists_and_is_enabled(
             [
                 "encryption=none",
                 "type=external",
-                "autoenable=true",
                 "externaltype={}".format(remote),
                 "uuid={}".format(uuid),
             ],
