@@ -40,7 +40,7 @@ devel = [
 ]
 
 [project.urls]
-repository = "https://github.com/m.risse/datalad-cds"
+repository = "https://github.com/matrss/datalad-cds"
 
 [project.scripts]
 git-annex-remote-cds = "datalad_cds.cds_remote:main"
