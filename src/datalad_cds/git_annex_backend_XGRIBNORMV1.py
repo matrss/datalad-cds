@@ -10,9 +10,9 @@ def generate_key_for_file(file: str) -> str:
     with subprocess.Popen(
         ["grib_copy", file, "/dev/stdout"], stdout=subprocess.PIPE
     ) as grib_copy_proc:
-        assert (
-            grib_copy_proc.stdout is not None
-        ), "this can never happen, but mypy needs it to realize that stdout is set"
+        assert grib_copy_proc.stdout is not None, (
+            "this can never happen, but mypy needs it to realize that stdout is set"
+        )
         for chunk in iter(
             functools.partial(grib_copy_proc.stdout.read, 128 * 1024), b""
         ):

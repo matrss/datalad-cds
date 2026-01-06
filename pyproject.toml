@@ -1,7 +1,7 @@
 [project]
 name = "datalad-cds"
 description = "DataLad extension for downloading from the Copernicus Climate Data Store"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
