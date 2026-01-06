@@ -46,7 +46,7 @@ repository = "https://github.com/matrss/datalad-cds"
 git-annex-remote-cds = "datalad_cds.cds_remote:main"
 
 [project.entry-points."datalad.extensions"]
-download-cds = "datalad_cds:command_suite"
+datalad-cds = "datalad_cds:command_suite"
 
 [build-system]
 requires = ["setuptools >= 43.0.0", "tomli; python_version < '3.11'"]

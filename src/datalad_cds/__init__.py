@@ -11,7 +11,7 @@ lgr = logging.getLogger("datalad.cds")
 # to be found by datalad
 command_suite = (
     # description of the command suite, displayed in cmdline help
-    "Custom Downloader for CDS data-store",
+    "Tools to interact with the Copernicus Climate Data Store",
     [
         # specification of a command, any number of commands can be defined
         (
