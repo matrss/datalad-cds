@@ -5,7 +5,7 @@ from typing import Union
 import datalad.api as da
 import pytest
 
-import datalad_cds
+import datalad_cds.spec
 
 request_dict = {
     "dataset": "reanalysis-era5-pressure-levels",
