@@ -2,9 +2,11 @@ import functools
 import hashlib
 import subprocess
 import sys
+import typing
 
 
-def send_message(*args, **kwargs) -> None:
+functools.wraps(print)
+def send_message(*args: typing.Any, **kwargs: typing.Any) -> None:
     print(*args, **kwargs)
     sys.stdout.flush()
 
