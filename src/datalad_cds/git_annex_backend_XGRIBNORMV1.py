@@ -5,7 +5,7 @@ import sys
 import typing
 
 
-functools.wraps(print)
+@functools.wraps(print)
 def send_message(*args: typing.Any, **kwargs: typing.Any) -> None:
     print(*args, **kwargs)
     sys.stdout.flush()
