@@ -44,6 +44,7 @@ repository = "https://github.com/matrss/datalad-cds"
 
 [project.scripts]
 git-annex-backend-XGRIBNORMV1 = "datalad_cds.git_annex_backend_XGRIBNORMV1:main"
+git-annex-backend-XGRIBNORMV2 = "datalad_cds.git_annex_backend_XGRIBNORMV2:main"
 git-annex-remote-cds = "datalad_cds.cds_remote:main"
 
 [project.entry-points."datalad.extensions"]
