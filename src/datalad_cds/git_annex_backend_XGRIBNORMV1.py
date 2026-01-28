@@ -1,5 +1,4 @@
 import functools
-import hashlib
 import subprocess
 import sys
 import typing
@@ -12,22 +11,23 @@ def send_message(*args: typing.Any, **kwargs: typing.Any) -> None:
 
 
 def generate_key_for_file(file: str) -> str:
-    size = 0
-    hash_md5 = hashlib.md5()
     with subprocess.Popen(
         ["grib_copy", file, "/dev/stdout"], stdout=subprocess.PIPE
     ) as grib_copy_proc:
         assert grib_copy_proc.stdout is not None, (
             "this can never happen, but mypy needs it to realize that stdout is set"
         )
-        for chunk in iter(
-            functools.partial(grib_copy_proc.stdout.read, 128 * 1024), b""
-        ):
-            size += len(chunk)
-            hash_md5.update(chunk)
+        md5sum_result = subprocess.run(
+            ["md5sum", "-"],
+            capture_output=True,
+            stdin=grib_copy_proc.stdout,
+            text=True,
+            check=True,
+        )
     if grib_copy_proc.returncode != 0:
         raise Exception("failed to run grib_copy")
-    return "XGRIBNORMV1-s{}--{}".format(size, hash_md5.hexdigest())
+    md5_hexdigest = md5sum_result.stdout.split()[0]
+    return "XGRIBNORMV1--{}".format(md5_hexdigest)
 
 
 def main() -> None:
