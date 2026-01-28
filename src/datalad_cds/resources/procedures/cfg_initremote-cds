@@ -1,0 +1,4 @@
+#!/bin/sh
+set -x
+
+exec git -C "$1" annex initremote cds type=external externaltype=cds uuid=923e2755-e747-42f4-890a-9c921068fb82 encryption=none
